@@ -145,6 +145,18 @@ class User {
     );
     return existingUser;
   }
+
+
+  async postFavorite(storyID, username, token) {
+    const response = await $.post(`${BASE_URL}/users/${username}/favorites/${storyID}`, {
+      token
+    });
+
+    this.favorites.push(response.user.favorites)
+
+  }
+
+
 }
 /**
  * Class to represent a single story. Has one method to update.

@@ -73,17 +73,32 @@ $(async function() {
 
 
 
-  $allStoriesList.on('click', ".fa-star", function(e){
+
+  /**
+   * Event listener for favoriting articles.
+   *  
+   */
+  $allStoriesList.on('click', ".fa-star", async function(e){
 
     $(this).toggleClass("far fa-star")
     $(this).toggleClass("fas fa-star")
 
-    if($("fas fa-star")){
-      currentUser.favorites.push()
-      localStorage.setItem("favorites", currentUser.favorites)
-    }
+    let storyId = $(this).closest("li").attr("id")
+    const token = localStorage.getItem("token");
+    let username = localStorage.getItem("username")
 
-    syncCurrentUserToLocalStorage();
+    console.log(storyId, username, token)
+    
+    await currentUser.postFavorite(storyId, username, token)
+
+
+
+
+    // if($("fas fa-star")){
+    //   currentUser.favorites.push()
+    //   localStorage.setItem("favorites", currentUser.favorites)
+    // }
+
 
   })
 
