@@ -62,10 +62,11 @@ $(async function() {
     }
 
     // call the login static method to create a new story
-    const story = await StoryList.addStory(token, newStory)
-    console.log(story)
+    const story = await storyList.addStory(token, newStory)
     const result = generateStoryHTML(story);
     $allStoriesList.append(result);
+ 
+
     
   });
 

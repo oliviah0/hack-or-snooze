@@ -32,7 +32,7 @@ class StoryList {
      It should also accept an object which with a title, author, and url
      */
   
-  static async addStory(token, newStory) {
+   async addStory(token, newStory) {
     let author = newStory.author
     let title = newStory.title
     let url = newStory.url
@@ -48,6 +48,7 @@ class StoryList {
   
  
     const story = new Story(response.story)
+    this.stories.unshift(story)
 
     return story
 
