@@ -51,6 +51,10 @@ nav {
   margin-left: auto;
 }
 
+.nav-left {
+  margin-right: auto;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -171,13 +175,12 @@ form > hr {
 
 .article-author {
   margin-top: 5px;
-  margin-left: 25px;
 }
 
 .article-username {
-  display: block;
+  /* display: block; */
   margin-top: 5px;
-  margin-left: 25px;
+  margin-left: 5px;
 }
 
 #favorited-articles,

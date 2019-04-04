@@ -33,9 +33,10 @@ class StoryList {
      */
   
    async addStory(token, newStory) {
-    let author = newStory.author
-    let title = newStory.title
-    let url = newStory.url
+     let { author, title, url } = newStory;
+    // let author = newStory.author;
+    // let title = newStory.title;
+    // let url = newStory.url;
     // this function should return the newly created story so it can be used in the script.js file where it will be appended to the DOM
     const response = await $.post(`${BASE_URL}/stories`, {
       token,
@@ -47,10 +48,10 @@ class StoryList {
     });
   
  
-    const story = new Story(response.story)
-    this.stories.unshift(story)
+    const story = new Story(response.story);
+    this.stories.unshift(story);
 
-    return story
+    return story;
 
   }
 }

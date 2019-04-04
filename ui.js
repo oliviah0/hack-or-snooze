@@ -53,20 +53,21 @@ $(async function() {
   
     const author = $("#author").val();
     const title = $("#title").val();
-    const url = $("#url").val()
+    const url = $("#url").val();
 
     let newStory = {
       author,
       title, 
       url
-    }
+    };
 
     // call the login static method to create a new story
-    const story = await storyList.addStory(token, newStory)
+    const story = await storyList.addStory(token, newStory);
     const result = generateStoryHTML(story);
     $allStoriesList.append(result);
  
-
+    $submitForm.slideToggle();
+    $allStoriesList.toggle();
     
   });
 
@@ -203,12 +204,13 @@ $(async function() {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
+      <i class="far fa-star"></i>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
+        <small class="article-hostname ${hostName}">(${hostName})</small><br>
         <small class="article-author">by ${story.author}</small>
-        <small class="article-hostname ${hostName}">(${hostName})</small>
-        <small class="article-username">posted by ${story.username}</small>
+        <small class="article-username">| posted by ${story.username}</small>
       </li>
     `);
 
