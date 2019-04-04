@@ -51,13 +51,9 @@ $(async function() {
     evt.preventDefault(); // no page-refresh on submit
     const token = localStorage.getItem("token");
   
-    // const author = $("#author").val();
-    // const title = $("#title").val();
-    // const url = $("url").val()
-
-    const author = "CH BROWN"
-    const title = "CH TITLE"
-    const url = "HTTPs://WWW.CHTITLE.COM"
+    const author = $("#author").val();
+    const title = $("#title").val();
+    const url = $("#url").val()
 
     let newStory = {
       author,
