@@ -73,7 +73,19 @@ $(async function() {
 
 
 
+  $allStoriesList.on('click', ".fa-star", function(e){
 
+    $(this).toggleClass("far fa-star")
+    $(this).toggleClass("fas fa-star")
+
+    if($("fas fa-star")){
+      currentUser.favorites.push()
+      localStorage.setItem("favorites", currentUser.favorites)
+    }
+
+    syncCurrentUserToLocalStorage();
+
+  })
 
 
 
@@ -117,6 +129,9 @@ $(async function() {
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
   });
+
+
+  
 
 
     /**
