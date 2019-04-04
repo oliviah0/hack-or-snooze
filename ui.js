@@ -8,6 +8,7 @@ $(async function() {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
+  const $navSubmit = $("#nav-submit")
 
   // global storyList variable
   let storyList = null;
@@ -35,6 +36,50 @@ $(async function() {
     syncCurrentUserToLocalStorage();
     loginAndSubmitForm();
   });
+
+
+
+
+
+
+
+    /**
+   * Event listener for SUBMITTING A NEW ARTICLE.
+   *  If successful we will append new article to DOM
+   */
+  $submitForm.on("submit", async function(evt) {
+    evt.preventDefault(); // no page-refresh on submit
+    const token = localStorage.getItem("token");
+  
+    // const author = $("#author").val();
+    // const title = $("#title").val();
+    // const url = $("url").val()
+
+    const author = "CH BROWN"
+    const title = "CH TITLE"
+    const url = "HTTPs://WWW.CHTITLE.COM"
+
+    let newStory = {
+      author,
+      title, 
+      url
+    }
+
+    // call the login static method to create a new story
+    const story = await StoryList.addStory(token, newStory)
+    console.log(story)
+    const result = generateStoryHTML(story);
+    $allStoriesList.append(result);
+    
+  });
+
+
+
+
+
+
+
+
 
   /**
    * Event listener for signing up.
@@ -75,6 +120,16 @@ $(async function() {
     $allStoriesList.toggle();
   });
 
+
+    /**
+   * Event Handler for Clicking Submit Button to open creating article section
+   */
+  $navSubmit.on("click", function() {
+    // Show the Login and Create Account Forms
+    $submitForm.slideToggle();
+    $allStoriesList.toggle();
+  });
+
   /**
    * Event handler for Navigation to Homepage
    */
@@ -98,7 +153,7 @@ $(async function() {
     //  this is designed to run once, on page load
     currentUser = await User.getLoggedInUser(token, username);
     await generateStories();
-
+// 
     if (currentUser) {
       showNavForLoggedInUser();
     }
@@ -179,11 +234,13 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
+
   }
 
   // simple function to pull the hostname from a URL
   function getHostName(url) {
     let hostName;
+
     if (url.indexOf("://") > -1) {
       hostName = url.split("/")[2];
     } else {
@@ -193,6 +250,7 @@ $(async function() {
       hostName = hostName.slice(4);
     }
     return hostName;
+ 
   }
 
   // sync current user information to localStorage
