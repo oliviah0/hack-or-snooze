@@ -151,8 +151,41 @@ class User {
     const response = await $.post(`${BASE_URL}/users/${username}/favorites/${storyID}`, {
       token
     });
+    
+    let favoritesAPI = response.user.favorites;
+    let singleStory;
 
-    this.favorites.push(response.user.favorites)
+    for (let i = 0; i < favoritesAPI.length; i++) {
+      if (favoritesAPI[i].storyId === storyID) {
+        singleStory = favoritesAPI[i]
+        break;
+      }
+    }
+
+    this.favorites.push(singleStory);
+
+  }
+
+  async deleteFavorite(storyID, username, token) {
+
+    let response = await $.ajax({
+      url: `${BASE_URL}/users/${username}/favorites/${storyID}`,
+      type: 'DELETE',
+      data: {
+        token
+      }
+    });
+
+    let favorites = this.favorites;
+
+    for (let i = 0; i < favorites.length; i++) {
+      if (favorites[i].storyId === storyID) {
+        favorites.splice(i, 1);
+        break;
+      }
+    }
+
+
 
   }
 

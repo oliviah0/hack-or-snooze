@@ -9,6 +9,8 @@ $(async function() {
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
   const $navSubmit = $("#nav-submit")
+  const $navFavorite = $("#nav-favorite")
+  const $allFavoritesList = $("#favorited-articles")
 
   // global storyList variable
   let storyList = null;
@@ -75,29 +77,29 @@ $(async function() {
 
 
   /**
-   * Event listener for favoriting articles.
+   * Event listener for FAVORITING articles.
    *  
    */
   $allStoriesList.on('click', ".fa-star", async function(e){
 
-    $(this).toggleClass("far fa-star")
-    $(this).toggleClass("fas fa-star")
+    $(this).toggleClass("far fa-star") //blank
+    $(this).toggleClass("fas fa-star") //filled
+
 
     let storyId = $(this).closest("li").attr("id")
     const token = localStorage.getItem("token");
     let username = localStorage.getItem("username")
-
     console.log(storyId, username, token)
+
+    if ($(this).hasClass("far")) {
+      await currentUser.deleteFavorite(storyId, username, token)
+    } else {
+      await currentUser.postFavorite(storyId, username, token)
+    }
+
     
-    await currentUser.postFavorite(storyId, username, token)
-
-
-
-
-    // if($("fas fa-star")){
-    //   currentUser.favorites.push()
-    //   localStorage.setItem("favorites", currentUser.favorites)
-    // }
+    
+    
 
 
   })
@@ -158,6 +160,21 @@ $(async function() {
     $allStoriesList.toggle();
   });
 
+
+
+
+    /**
+   * Event Handler for Clicking Submit Button to open creating article section
+   */
+  $navFavorite.on("click", function() {
+    // Show the Login and Create Account Forms
+    $allFavoritesList.slideToggle();
+    $allStoriesList.toggle();
+
+  });
+
+
+
   /**
    * Event handler for Navigation to Homepage
    */
@@ -181,6 +198,7 @@ $(async function() {
     //  this is designed to run once, on page load
     currentUser = await User.getLoggedInUser(token, username);
     await generateStories();
+    await generateFavorites();
 // 
     if (currentUser) {
       showNavForLoggedInUser();
@@ -225,11 +243,36 @@ $(async function() {
     }
   }
 
+
+  async function generateFavorites() {
+    let userFavorites = currentUser.favorites
+    $allFavoritesList.empty();
+
+    // loop through all of our stories and generate HTML for them
+    for (let story of userFavorites) {
+      const result = generateStoryHTML(story);
+      // result.toggleClass("far fa-star")
+      // result.toggleClass("fas fa-star")
+      
+      $allFavoritesList.append(result);
+    }
+  }
+
   /**
    * A function to render HTML for an individual Story instance
    */
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
+
+    let favorites = currentUser.favorites
+
+    for 
+
+    if (story.storyId )
+
+
+
+    //if story is in favorites
 
     // render story markup
     const storyMarkup = $(`
