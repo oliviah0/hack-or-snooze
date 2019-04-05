@@ -246,38 +246,42 @@ $article.on("click", ".fa-trash", async function(e){
    */
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
-    let trashIcon = ""
-    let starIcon = ""
-    
-    if(currentUser){
-      let star = "far fa-star"
-      let trashcan = "fa fa-trash"
+
+    let star = "hidden"
+    let trashcan = "hidden"
+
+
+    if (currentUser) {
       let favorites = currentUser.favorites
       let userStories = currentUser.ownStories
+      star = "far fa-star"
+
+      //checks if story from storyList is a favorite in user favorites
         for(let favorite of favorites){
           if(favorite.storyId === story.storyId){
               star = "fas fa-star"
               break;
           }
         }
+
+        //checks if story from storyList is a story created by the user
         for(let userStory of userStories){
           if(userStory.storyId === story.storyId){
-            trashIcon = `<i class="${trashcan}"></i>`
+            trashcan = "fa fa-trash"
           }
         }
-      starIcon = `<i class="${star}"></i>`
     }
+ 
 
-    
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
-      ${starIcon}
+      <i class="${star}"></i>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
         <small class="article-hostname ${hostName}">(${hostName})</small>
-        ${trashIcon}
+        <i class="${trashcan}"></i>
         <br>
         <small class="article-author">by ${story.author}</small>
         <small class="article-username">| posted by ${story.username}</small>
