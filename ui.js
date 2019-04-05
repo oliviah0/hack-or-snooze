@@ -89,12 +89,17 @@ $(async function() {
     let storyId = $(this).closest("li").attr("id")
     const token = localStorage.getItem("token");
     let username = localStorage.getItem("username")
-    console.log(storyId, username, token)
+
 
     if ($(this).hasClass("far")) {
       await currentUser.deleteFavorite(storyId, username, token)
+      $allFavoritesList.find("storyId")
+
     } else {
-      await currentUser.postFavorite(storyId, username, token)
+      let response =  await currentUser.postFavorite(storyId, username, token)
+      let story = generateStoryHTML(response)
+      $allFavoritesList.append(story)
+      
     }
 
     
@@ -198,10 +203,11 @@ $(async function() {
     //  this is designed to run once, on page load
     currentUser = await User.getLoggedInUser(token, username);
     await generateStories();
-    await generateFavorites();
+    // await generateFavorites();
 // 
     if (currentUser) {
       showNavForLoggedInUser();
+      await generateFavorites();
     }
   }
 
@@ -263,17 +269,23 @@ $(async function() {
    */
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
-
-    let favorites = currentUser.favorites
-    let star 
-
-    for(let i = 0; i<favorites.length; i++){
-      if(favorites[i].storyId === story.storyId){
-          star = "fas fa-star"
-          break;
+    let star = "far fa-star"
+    
+    if(currentUser){
+      let favorites = currentUser.favorites
+        for(let i = 0; i<favorites.length; i++){
+          if(favorites[i].storyId === story.storyId){
+              star = "fas fa-star"
+              break;
+          }
       }
-      star = "far fa-star"
     }
+    
+  
+
+
+
+
 
 
 

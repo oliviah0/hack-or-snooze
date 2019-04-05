@@ -164,6 +164,8 @@ class User {
 
     this.favorites.push(singleStory);
 
+    return singleStory
+
   }
 
   async deleteFavorite(storyID, username, token) {
