@@ -165,12 +165,13 @@ class User {
       token
     });
     
-    let favoritesAPI = response.user.favorites;
+    let userFavorites = response.user.favorites;
     let singleStory;
 
-    for (let i in favoritesAPI) {
-      if (favoritesAPI[i].storyId === storyID) {
-        singleStory = favoritesAPI[i]
+    for (let favorite of userFavorites) {
+      console.log(favorite)
+      if (favorite.storyId === storyID) {
+        singleStory = favorite
         break;
       }
     }

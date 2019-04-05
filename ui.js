@@ -78,20 +78,20 @@ $article.on("click", ".fa-trash", async function(e){
    *  
    */
  
-  $article.on('click', ".fa-star", async function(e){
+  $article.on('click', ".fa-star", function(e){
 
-    $(this).toggleClass("far fa-star") //blank
-    $(this).toggleClass("fas fa-star") //filled
+    $(this).toggleClass("far fas") //blank
+    // $(this).toggleClass("fas fa-star") //filled
 
     let storyId = $(this).closest("li").attr("id")
     const token = localStorage.getItem("token");
     let username = localStorage.getItem("username")
 
     if ($(this).hasClass("far")) {
-      await currentUser.deleteFavorite(storyId, username, token)
+      currentUser.deleteFavorite(storyId, username, token)
 
     } else {
-      await currentUser.addFavorite(storyId, username, token)
+      currentUser.addFavorite(storyId, username, token)
       // let story = generateStoryHTML(response)
       // $allFavoritesList.append(story)
     }
@@ -254,14 +254,14 @@ $article.on("click", ".fa-trash", async function(e){
       let trashcan = "fa fa-trash"
       let favorites = currentUser.favorites
       let userStories = currentUser.ownStories
-        for(let i in favorites){
-          if(favorites[i].storyId === story.storyId){
+        for(let favorite of favorites){
+          if(favorite.storyId === story.storyId){
               star = "fas fa-star"
               break;
           }
         }
-        for(let j in userStories){
-          if(userStories[j].storyId === story.storyId){
+        for(let userStory of userStories){
+          if(userStory.storyId === story.storyId){
             trashIcon = `<i class="${trashcan}"></i>`
           }
         }
