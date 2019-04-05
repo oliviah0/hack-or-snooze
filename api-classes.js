@@ -33,12 +33,12 @@ class StoryList {
      It should also accept an object which with a title, author, and url
      */
   
-   async addStory(token, newStory) {
+   async addStory(user, newStory) {
      let { author, title, url } = newStory;
     
     // this function should return the newly created story so it can be used in the script.js file where it will be appended to the DOM
     const response = await $.post(`${BASE_URL}/stories`, {
-      token,
+      token: user.loginToken,
       story: {
         author,
         title,
@@ -49,9 +49,23 @@ class StoryList {
  
     const story = new Story(response.story);
     this.stories.unshift(story);
+    user.ownStories.unshift(story)
 
     return story;
 
+  }
+  // Adding remove story function
+  async removeStory(storyID, user){
+    let response = await $.ajax({
+      url: `${BASE_URL}/stories/${storyID}`,
+      type: 'DELETE',
+      data: {
+        token: user.loginToken
+      }
+    });
+
+    this.stories = this.stories.filter(story => story.storyId !== storyID)
+    user.ownStories = user.ownStories.filter(story => story.storyId !== storyID)
   }
 }
 
@@ -178,6 +192,8 @@ class User {
     });
 
     let favorites = this.favorites;
+
+    // favorites = favorites.filter(story => storyId !== storyID)
 
     for (let i in favorites) {
       if (favorites[i].storyId === storyID) {

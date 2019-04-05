@@ -223,3 +223,14 @@ form > hr {
     margin: 8px auto;
   }
 }
+
+.fa-trash{
+opacity: 0
+}
+
+/* .fa-trash:hover{
+  opacity: .5;
+} */
+li:hover > .fa-trash{
+  opacity: .5;
+}

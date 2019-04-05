@@ -12,6 +12,7 @@ $(async function() {
   const $navFavorite = $("#nav-favorite")
   const $allFavoritesList = $("#favorited-articles")
   const $article = $("article")
+  const $navHome = $("#nav-all")
 
   let storyList = null;
   let currentUser = null;
@@ -45,7 +46,7 @@ $(async function() {
    */
   $submitForm.on("submit", async function(evt) {
     evt.preventDefault(); // no page-refresh on submit
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
   
     const author = $("#author").val();
     const title = $("#title").val();
@@ -58,23 +59,25 @@ $(async function() {
     };
 
     // call the login static method to create a new story
-    const story = await storyList.addStory(token, newStory);
-    const result = generateStoryHTML(story);
-    $allStoriesList.append(result);
- 
-    $submitForm.slideToggle();
-    $allStoriesList.toggle();
-    
+    await storyList.addStory(currentUser, newStory);
+    $navHome.trigger("click")
+
   });
 
-
+// Event Listener for clicking on trashcan
+$article.on("click", ".fa-trash", async function(e){
+  let $story = $(this).closest("li")
+  let storyId = $story.attr("id")
+  await storyList.removeStory(storyId, currentUser)
+  $story.remove()
+})
 
 
   /**
    * Event listener for FAVORITING articles.
    *  
    */
-  // $allStorieList.on('click', ".fa-star", async function(e){
+ 
   $article.on('click', ".fa-star", async function(e){
 
     $(this).toggleClass("far fa-star") //blank
@@ -129,10 +132,10 @@ $(async function() {
    * Event Handler for Clicking Login
    */
   $navLogin.on("click", function() {
-    // Show the Login and Create Account Forms
+    hideElements()
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
-    $allStoriesList.toggle();
+    // $allStoriesList.toggle();
   });
 
 
@@ -201,8 +204,8 @@ $(async function() {
     $createAccountForm.trigger("reset");
 
     // show the stories
-    $allStoriesList.show();
-
+    // $allStoriesList.show();
+    $navHome.trigger("click")
     // update the navigation bar
     showNavForLoggedInUser();
   }
@@ -243,26 +246,39 @@ $(async function() {
    */
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
-    let star = "far fa-star"
+    let trashIcon = ""
+    let starIcon = ""
     
     if(currentUser){
+      let star = "far fa-star"
+      let trashcan = "fa fa-trash"
       let favorites = currentUser.favorites
+      let userStories = currentUser.ownStories
         for(let i in favorites){
           if(favorites[i].storyId === story.storyId){
               star = "fas fa-star"
               break;
           }
-      }
+        }
+        for(let j in userStories){
+          if(userStories[j].storyId === story.storyId){
+            trashIcon = `<i class="${trashcan}"></i>`
+          }
+        }
+      starIcon = `<i class="${star}"></i>`
     }
+
     
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
-      <i class="${star}"></i>
+      ${starIcon}
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
-        <small class="article-hostname ${hostName}">(${hostName})</small><br>
+        <small class="article-hostname ${hostName}">(${hostName})</small>
+        ${trashIcon}
+        <br>
         <small class="article-author">by ${story.author}</small>
         <small class="article-username">| posted by ${story.username}</small>
       </li>
