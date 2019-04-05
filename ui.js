@@ -247,7 +247,7 @@ $(async function() {
     
     if(currentUser){
       let favorites = currentUser.favorites
-        for(let i = 0; i < favorites.length; i++){
+        for(let i in favorites){
           if(favorites[i].storyId === story.storyId){
               star = "fas fa-star"
               break;
