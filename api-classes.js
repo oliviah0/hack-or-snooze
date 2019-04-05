@@ -24,6 +24,7 @@ class StoryList {
     const stories = response.stories.map(story => new Story(story));
     // build an instance of our own class using the new array of stories
     const storyList = new StoryList(stories)
+    // console.log("made it to story list")
     return storyList;
   }
   /**
@@ -34,9 +35,7 @@ class StoryList {
   
    async addStory(token, newStory) {
      let { author, title, url } = newStory;
-    // let author = newStory.author;
-    // let title = newStory.title;
-    // let url = newStory.url;
+    
     // this function should return the newly created story so it can be used in the script.js file where it will be appended to the DOM
     const response = await $.post(`${BASE_URL}/stories`, {
       token,
@@ -147,7 +146,7 @@ class User {
   }
 
 
-  async postFavorite(storyID, username, token) {
+  async addFavorite(storyID, username, token) {
     const response = await $.post(`${BASE_URL}/users/${username}/favorites/${storyID}`, {
       token
     });
@@ -186,12 +185,7 @@ class User {
         break;
       }
     }
-
-
-
   }
-
-
 }
 /**
  * Class to represent a single story. Has one method to update.

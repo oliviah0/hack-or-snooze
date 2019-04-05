@@ -11,11 +11,9 @@ $(async function() {
   const $navSubmit = $("#nav-submit")
   const $navFavorite = $("#nav-favorite")
   const $allFavoritesList = $("#favorited-articles")
+  const $article = $("article")
 
-  // global storyList variable
   let storyList = null;
-
-  // global currentUser variable
   let currentUser = null;
 
   await checkIfLoggedIn();
@@ -38,10 +36,6 @@ $(async function() {
     syncCurrentUserToLocalStorage();
     loginAndSubmitForm();
   });
-
-
-
-
 
 
 
@@ -80,36 +74,25 @@ $(async function() {
    * Event listener for FAVORITING articles.
    *  
    */
-  $allStoriesList.on('click', ".fa-star", async function(e){
+  // $allStorieList.on('click', ".fa-star", async function(e){
+  $article.on('click', ".fa-star", async function(e){
 
     $(this).toggleClass("far fa-star") //blank
     $(this).toggleClass("fas fa-star") //filled
-
 
     let storyId = $(this).closest("li").attr("id")
     const token = localStorage.getItem("token");
     let username = localStorage.getItem("username")
 
-
     if ($(this).hasClass("far")) {
       await currentUser.deleteFavorite(storyId, username, token)
-      $allFavoritesList.find("storyId")
 
     } else {
-      let response =  await currentUser.postFavorite(storyId, username, token)
-      let story = generateStoryHTML(response)
-      $allFavoritesList.append(story)
-      
+      await currentUser.addFavorite(storyId, username, token)
+      // let story = generateStoryHTML(response)
+      // $allFavoritesList.append(story)
     }
-
-    
-    
-    
-
-
-  })
-
-
+  });
 
 
 
@@ -153,29 +136,24 @@ $(async function() {
   });
 
 
-  
-
 
     /**
-   * Event Handler for Clicking Submit Button to open creating article section
+   * Event Handler for Clicking Submit Button to Show the Login and Create Account Forms
    */
   $navSubmit.on("click", function() {
-    // Show the Login and Create Account Forms
+    hideElements()
     $submitForm.slideToggle();
-    $allStoriesList.toggle();
   });
 
 
 
-
     /**
-   * Event Handler for Clicking Submit Button to open creating article section
+   * Event Handler for Clicking Favorites Button to favorites section
    */
   $navFavorite.on("click", function() {
-    // Show the Login and Create Account Forms
+    hideElements()
+    generateFavorites()
     $allFavoritesList.slideToggle();
-    $allStoriesList.toggle();
-
   });
 
 
@@ -194,7 +172,7 @@ $(async function() {
    * Renders page information accordingly.
    */
   async function checkIfLoggedIn() {
-    // let's see if we're logged in
+  
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
@@ -203,8 +181,7 @@ $(async function() {
     //  this is designed to run once, on page load
     currentUser = await User.getLoggedInUser(token, username);
     await generateStories();
-    // await generateFavorites();
-// 
+
     if (currentUser) {
       showNavForLoggedInUser();
       await generateFavorites();
@@ -257,9 +234,6 @@ $(async function() {
     // loop through all of our stories and generate HTML for them
     for (let story of userFavorites) {
       const result = generateStoryHTML(story);
-      // result.toggleClass("far fa-star")
-      // result.toggleClass("fas fa-star")
-      
       $allFavoritesList.append(result);
     }
   }
@@ -273,7 +247,7 @@ $(async function() {
     
     if(currentUser){
       let favorites = currentUser.favorites
-        for(let i = 0; i<favorites.length; i++){
+        for(let i = 0; i < favorites.length; i++){
           if(favorites[i].storyId === story.storyId){
               star = "fas fa-star"
               break;
@@ -281,16 +255,6 @@ $(async function() {
       }
     }
     
-  
-
-
-
-
-
-
-
-    //if story is in favorites
-
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
@@ -310,6 +274,7 @@ $(async function() {
   // hide all elements in elementsArr
   function hideElements() {
     const elementsArr = [
+      $allFavoritesList,
       $submitForm,
       $allStoriesList,
       $filteredArticles,
@@ -323,7 +288,8 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
-
+    $navSubmit.show();
+    $navFavorite.show();
   }
 
   // simple function to pull the hostname from a URL
@@ -339,7 +305,6 @@ $(async function() {
       hostName = hostName.slice(4);
     }
     return hostName;
- 
   }
 
   // sync current user information to localStorage
