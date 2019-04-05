@@ -154,7 +154,7 @@ class User {
     let favoritesAPI = response.user.favorites;
     let singleStory;
 
-    for (let i = 0; i < favoritesAPI.length; i++) {
+    for (let i in favoritesAPI) {
       if (favoritesAPI[i].storyId === storyID) {
         singleStory = favoritesAPI[i]
         break;
@@ -179,7 +179,7 @@ class User {
 
     let favorites = this.favorites;
 
-    for (let i = 0; i < favorites.length; i++) {
+    for (let i in favorites) {
       if (favorites[i].storyId === storyID) {
         favorites.splice(i, 1);
         break;
